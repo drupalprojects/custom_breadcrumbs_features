@@ -1,2 +1,41 @@
 <?php
 
+// TODO share with .install. Watch vocabulary / term stuff.
+// TODO run coder.
+// TODO look for dpm / todos.
+
+/**
+ * Get a list of breadcrumb types, keyed by their associated machine name.
+ *
+ * @return
+ *   List of breadcrumb types keyed by their machine name.
+ */
+function _custom_breadcrumbs_features_get_types() {
+  return array(
+    'custom_breadcrumb'             => 'Custom Breadcrumb',
+    'custom_breadcrumbsapi'         => 'Custom Breadcrumbs Api',
+    'custom_breadcrumbs_panels'     => 'Custom Breadcrumbs Panels',
+    'custom_breadcrumbs_paths'      => 'Custom Breadcrumbs Paths',
+    'custom_breadcrumbs_term'       => 'Custom Breadcrumbs Term',
+    'custom_breadcrumbs_views'      => 'Custom Breadcrumbs Views',
+    'custom_breadcrumbs_vocabulary' => 'Custom Breadcrumbs Vocabulary',
+  );
+}
+
+/**
+ * Implements hook_features_api().
+ */
+function custom_breadcrumbs_features_features_api() {
+  $types = _custom_breadcrumbs_features_get_types();
+  $exports = array();
+  foreach ($exportables as $type => $name) {
+    $exports[$type] = array(
+      'name' => $name,
+      'feature_source' => TRUE,
+      'default_hook' => $type . '_features_default_settings',
+      'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/custom_breadcrumbs_features.features.inc',
+    );
+  }
+  return $export;
+}
+

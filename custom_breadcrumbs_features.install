@@ -2,7 +2,12 @@
 
 // TODO see hook_update_7002 (for each submodule).
 // TODO populate machine names with values existing prior to enabling this module.
-// TODO test when submodule not enabled.
+// TODO test when submodule not enabled => alter only if submodule is enabled ?
+// TODO write tests.
+// TODO use 'export' ctools in schema.
+// TODO test across different drupal instances.
+// TODO test when breadcrumbs created before module enabled.
+// TODO use_custom_breadcrumbs_features_get_submodules()
 
 /**
  * Implements hook_schema_alter().
@@ -14,6 +19,7 @@ function custom_breadcrumbs_schema_alter(&$schema) {
     'custom_breadcrumb',
     'custom_breadcrumbsapi',
     'custom_breadcrumbs_panels',
+    'custom_breadcrumbs_paths',
     'custom_breadcrumbs_taxonomy',
     'custom_breadcrumbs_views',
   );

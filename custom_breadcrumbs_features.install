@@ -1,0 +1,30 @@
+<?php
+
+// TODO see hook_update_7002 (for each submodule).
+// TODO populate machine names with values existing prior to enabling this module.
+// TODO test when submodule not enabled.
+
+/**
+ * Implements hook_schema_alter().
+ *
+ * Add machine_name field in each table containing breadcrumbs.
+ */
+function custom_breadcrumbs_schema_alter(&$schema) {
+  $tables = array(
+    'custom_breadcrumb',
+    'custom_breadcrumbsapi',
+    'custom_breadcrumbs_panels',
+    'custom_breadcrumbs_taxonomy',
+    'custom_breadcrumbs_views',
+  );
+  foreach ($tables as $table) {
+    $schema[$table]['fields']['machine_name'] = array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'description' => 'The unique machine name for the custom breadcrumb.',
+    );
+    $schema[$table]['unique keys']['machine_name'] = array('machine_name');
+  }
+}
+

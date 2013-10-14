@@ -24,16 +24,54 @@ function _custom_breadcrumbs_features_get_types() {
  * Implements hook_features_api().
  */
 function custom_breadcrumbs_features_features_api() {
-  $types = _custom_breadcrumbs_features_get_types();
+  $cb_types = _custom_breadcrumbs_features_get_types();
   $exports = array();
-  foreach ($exportables as $table => $type) {
+  foreach ($cb_types as $table => $cb_type) {
     $exports[$table] = array(
-      'name' => $type['name'],
+      'name' => $cb_type['name'],
       'feature_source' => TRUE,
       'default_hook' => $table . '_features_default_settings',
       'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/custom_breadcrumbs_features.features.inc',
     );
   }
-  return $export;
+  return $exports;
 }
 
+
+/**
+ * Implements hook_form_alter().
+ * TODO use form_ids here instead on _custom_xxx_get_types();
+ */
+function custom_breadcrumbs_features_form_alter(&$form, &$form_alter, $form_id) {
+  $forms = array(
+    'custom_breadcrumbs_form'                     => 'node_type',
+    'custom_breadcrumbsapi_form'                  => 'module_page',
+    'custom_breadcrumbs_panel_form'               => 'panel_id',
+    'custom_breadcrumbs_paths_form'               => 'specific_path',
+    'custom_breadcrumbs_taxonomy_term_form'       => 'tid',
+    'custom_breadcrumbs_taxonomy_vocabulary_form' => 'vid',
+    'custom_breadcrumbs_views_form'               => 'views_path',
+  );
+  if (in_array($form_id, array_keys($forms))) {
+    $form['machine_name'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => '', // TODO set current machine name (if exists).
+      '#maxlength' => 32,
+      '#disabled' => FALSE, // TODO set TRUE if already set.
+      '#machine_name' => array(
+        'exists' => 'custom_breadcrumbs_features_load',
+        'source' => array($forms[$form_id]), // TODO value = 1 for vid / tid, not ideal.
+      ),
+      '#description' => t('A unique machine-readable name for this breadcrumb. It must only contain lowercase letters, numbers, and underscores. This name will be used when featurizing breadcrumbs.'),
+      '#weight' => -49,
+    );
+  }
+}
+
+/**
+ * Loads a breadcrumb.
+ * TODO we may re-use a function from custom_breadcrumbs.module
+ */
+function custom_breadcrumbs_features_load($stuff) { // TODO change stuff
+  return FALSE;
+}

@@ -73,6 +73,7 @@ function _custom_breadcrumbs_features_features_export($data, &$export, $module_n
   $types = _custom_breadcrumbs_features_get_types();
   $module = $types[$table]['module']; // TODO use $module_name ?
   $export['dependencies']['features'] = 'features';
+  $export['dependencies']['custom_breadcrumbs_features'] = 'custom_breadcrumbs_features';
   $export['dependencies'][$module] = $module; // TODO [$table] = $module ? cf terms & vocabularies
   foreach ($data as $component) {
     $export['features'][$table][$component] = $component;

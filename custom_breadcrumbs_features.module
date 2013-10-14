@@ -40,31 +40,32 @@ function custom_breadcrumbs_features_features_api() {
 
 /**
  * Implements hook_form_alter().
- * TODO use form_ids here instead on _custom_xxx_get_types();
+ * TODO js fill name
  */
 function custom_breadcrumbs_features_form_alter(&$form, &$form_alter, $form_id) {
-  $forms = array(
-    'custom_breadcrumbs_form'                     => 'node_type',
-    'custom_breadcrumbsapi_form'                  => 'module_page',
-    'custom_breadcrumbs_panel_form'               => 'panel_id',
-    'custom_breadcrumbs_paths_form'               => 'specific_path',
-    'custom_breadcrumbs_taxonomy_term_form'       => 'tid',
-    'custom_breadcrumbs_taxonomy_vocabulary_form' => 'vid',
-    'custom_breadcrumbs_views_form'               => 'views_path',
-  );
-  if (in_array($form_id, array_keys($forms))) {
-    $form['machine_name'] = array(
-      '#type' => 'machine_name',
-      '#default_value' => '', // TODO set current machine name (if exists).
-      '#maxlength' => 32,
-      '#disabled' => FALSE, // TODO set TRUE if already set.
-      '#machine_name' => array(
-        'exists' => 'custom_breadcrumbs_features_load',
-        'source' => array($forms[$form_id]), // TODO value = 1 for vid / tid, not ideal.
-      ),
-      '#description' => t('A unique machine-readable name for this breadcrumb. It must only contain lowercase letters, numbers, and underscores. This name will be used when featurizing breadcrumbs.'),
-      '#weight' => -49,
-    );
+  switch ($form_id) {
+    case 'custom_breadcrumbs_form':
+    case 'custom_breadcrumbsapi_form':
+    case 'custom_breadcrumbs_panels_form':
+    case 'custom_breadcrumbs_paths_form':
+    case 'custom_breadcrumbs_taxonomy_term_form':
+    case 'custom_breadcrumbs_taxonomy_vocabulary_form':
+    case 'custom_breadcrumbs_views_form':
+      $form['name']['#required'] = TRUE;
+      $form['name']['#attached']['js'] = array(
+        drupal_get_path('module', 'custom_breadcrumbs_features') . '/js/custom_breadcrumbs_features.js',
+      );
+      $form['machine_name'] = array(
+        '#type' => 'machine_name',
+        '#default_value' => '', // TODO set current machine name (if exists).
+        '#maxlength' => 32,
+        '#disabled' => FALSE, // TODO set TRUE if already set.
+        '#machine_name' => array(
+          'exists' => 'custom_breadcrumbs_features_load',
+        ),
+        '#description' => t('A unique machine-readable name for this breadcrumb. It must only contain lowercase letters, numbers, and underscores. This name will be used when featurizing breadcrumbs.'),
+        '#weight' => -49,
+      );
   }
 }
 
@@ -75,3 +76,5 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_alter, $form_id) 
 function custom_breadcrumbs_features_load($stuff) { // TODO change stuff
   return FALSE;
 }
+
+// TODO move features.inc in includes/

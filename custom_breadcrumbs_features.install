@@ -20,7 +20,8 @@ function custom_breadcrumbs_schema_alter(&$schema) {
     'custom_breadcrumbsapi',
     'custom_breadcrumbs_panels',
     'custom_breadcrumbs_paths',
-    'custom_breadcrumbs_taxonomy',
+    'custom_breadcrumbs_taxonomy_term',
+    'custom_breadcrumbs_taxonomy_vocabulary',
     'custom_breadcrumbs_views',
   );
   foreach ($tables as $table) {

@@ -37,13 +37,22 @@ function custom_breadcrumbs_views_features_export_options() {
   return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_views');
 }
 
+/**
+ * Implements hook_features_export_options(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_vocabulary_features_export_options() {
+  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_taxonomy_vocabulary');
+}
+
 
 /**
  * Generic function for hook_features_export().
  */
 function _custom_breadcrumbs_features_features_export($data, &$export, $module_name, $table) {
+  $types = _custom_breadcrumbs_features_get_types();
+  $module = $types[$table]['module']; // TODO use $module_name ?
   $export['dependencies']['features'] = 'features';
-  $export['dependencies'][$table] = $table; // TODO pb for voc / terms. use $module_name ?
+  $export['dependencies'][$module] = $module;
   foreach ($data as $component) {
     $export['features'][$table][$component] = $component;
   }
@@ -69,6 +78,13 @@ function custom_breadcrumbsapi_features_export($data, &$export, $module_name) {
  */
 function custom_breadcrumbs_views_features_export($data, &$export, $module_name) {
   return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_views');
+}
+
+/**
+ * Implements hook_features_export(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_vocabulary_features_export($data, &$export, $module_name) {
+  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 
@@ -114,22 +130,29 @@ function _custom_breadcrumbs_features_export_item($option, $table) {
 /**
  * Implements hook_features_export_render(). [component hook]
  */
-function custom_breadcrumb_features_export_render($module_name, $data, $export) {
+function custom_breadcrumb_features_export_render($module_name, $data, $export = NULL) {
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumb');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
-function custom_breadcrumbsapi_features_export_render($module_name, $data, $export) {
+function custom_breadcrumbsapi_features_export_render($module_name, $data, $export = NULL) {
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbsapi');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
-function custom_breadcrumbs_views_features_export_render($module_name, $data, $export) {
+function custom_breadcrumbs_views_features_export_render($module_name, $data, $export = NULL) {
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_views');
+}
+
+/**
+ * Implements hook_features_export_render(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_vocabulary_features_export_render($module_name, $data, $export = NULL) {
+  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 
@@ -185,6 +208,13 @@ function custom_breadcrumbs_views_features_rebuild($module) {
   _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_views');
 }
 
+/**
+ * Implements hook_features_rebuild(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_vocabulary_features_rebuild($module) {
+  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_taxonomy_vocabulary');
+}
+
 
 /**
  * Implements hook_features_revert(). [component hook]
@@ -205,4 +235,11 @@ function custom_breadcrumbsapi_features_revert($module) {
  */
 function custom_breadcrumbs_views_features_revert($module) {
   custom_breadcrumbs_views_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_revert(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_vocabulary_features_revert($module) {
+  custom_breadcrumbs_taxonomy_vocabulary_features_rebuild($module);
 }

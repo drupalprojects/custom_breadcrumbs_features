@@ -5,9 +5,9 @@
 /**
  * Generic function for hook_features_export_options().
  */
-function _custom_breadcrumbs_features_features_export_options($cb_type) {
+function _custom_breadcrumbs_features_features_export_options($table) {
   $options = array();
-  $result = db_select($cb_type, 'cb')
+  $result = db_select($table, 'cb')
     ->fields('cb', array('machine_name', 'name'))
     ->execute();
   foreach ($result as $crumb) {
@@ -23,15 +23,22 @@ function custom_breadcrumb_features_export_options() {
   return _custom_breadcrumbs_features_features_export_options('custom_breadcrumb');
 }
 
+/**
+ * Implements hook_features_export_options(). [component hook]
+ */
+function custom_breadcrumbsapi_features_export_options() {
+  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbsapi');
+}
+
 
 /**
  * Generic function for hook_features_export().
  */
-function _custom_breadcrumbs_features_features_export($data, &$export, $module_name, $cb_type) {
+function _custom_breadcrumbs_features_features_export($data, &$export, $module_name, $table) {
   $export['dependencies']['features'] = 'features';
-  $export['dependencies'][$cb_type] = $cb_type; // TODO pb for voc / terms. use $module_name ?
+  $export['dependencies'][$table] = $table; // TODO pb for voc / terms. use $module_name ?
   foreach ($data as $component) {
-    $export['features'][$cb_type][$component] = $component;
+    $export['features'][$table][$component] = $component;
   }
   return array(); // TODO weird
 }
@@ -43,16 +50,23 @@ function custom_breadcrumb_features_export($data, &$export, $module_name) {
   return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumb');
 }
 
+/**
+ * Implements hook_features_export(). [component hook]
+ */
+function custom_breadcrumbsapi_features_export($data, &$export, $module_name) {
+  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbsapi');
+}
+
 
 /**
  * Generic function for hook_features_export_render().
  */
-function _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, $cb_type) {
+function _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, $table) {
   $code = array();
-  $code[] = "  $cb_type = array();";
+  $code[] = "  $table = array();";
   $code[] = '';
   foreach ($data as $option) {
-    $item = _custom_breadcrumbs_features_export_item($option, $cb_type);
+    $item = _custom_breadcrumbs_features_export_item($option, $table);
     if (isset($item[$option])) {
       $export = features_var_export($option);
       $identifier = features_var_export($option);
@@ -61,16 +75,16 @@ function _custom_breadcrumbs_features_features_export_render($module_name, $data
       $code[] = "";
     }
   }
-  $code[] = "  return $cb_type;";
+  $code[] = "  return $table;";
   $code = import("\n", $code);
-  return array($cb_type . '_features_default_settings' => $code);
+  return array($table . '_features_default_settings' => $code);
 }
 
 /**
  * Generic function to retrieve breadcrumb data.
  */
-function _custom_breadcrumbs_features_export_item($option, $cb_type) {
-  $result = db_select($cb_type, 'cb')
+function _custom_breadcrumbs_features_export_item($option, $table) {
+  $result = db_select($table, 'cb')
     ->fields('cb')
     ->condition('machine_name', $option)
     ->execute();
@@ -90,27 +104,34 @@ function custom_breadcrumb_features_export_render($module_name, $data, $export) 
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumb');
 }
 
+/**
+ * Implements hook_features_export_render(). [component hook]
+ */
+function custom_breadcrumbsapi_features_export_render($module_name, $data, $export) {
+  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbsapi');
+}
+
 
 /**
  * Generic function for hook_features_rebuild().
  */
-function _custom_breadcrumbs_features_features_rebuild($module, $cb_type) {
+function _custom_breadcrumbs_features_features_rebuild($module, $table) {
   // TODO why do we invoke this hook ?
-  $items = module_invoke($module, $cb_type . '_features_default_settings');
+  $items = module_invoke($module, $table . '_features_default_settings');
   // Loop over breadcrumbs we need to recreate.
   foreach ($items as $option => $item) {
-    _custom_breadcrumbs_features_rebuild_item($item, $cb_type);
+    _custom_breadcrumbs_features_rebuild_item($item, $table);
   }
 }
 
 /**
  * Generic function to store a breadcrumb in database.
  */
-function _custom_breadcrumbs_features_rebuild_item($item, $cb_type) {
-  db_delete($cb_type)
+function _custom_breadcrumbs_features_rebuild_item($item, $table) {
+  db_delete($table)
     ->condition('machine_name', $item['machine_name'])
     ->execute();
-  db_insert($cb_type) // TODO maybe could use ->fields($item)
+  db_insert($table) // TODO maybe could use ->fields($item)
     ->fields(array(
       'name'           => $item['name'],
       'machine_name'   => $item['machine_name'],
@@ -130,8 +151,23 @@ function custom_breadcrumb_features_rebuild($module) {
 }
 
 /**
+ * Implements hook_features_rebuild(). [component hook]
+ */
+function custom_breadcrumbsapi_features_rebuild($module) {
+  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbsapi');
+}
+
+
+/**
  * Implements hook_features_revert(). [component hook]
  */
 function custom_breadcrumb_features_revert($module) {
   custom_breadcrumb_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_revert(). [component hook]
+ */
+function custom_breadcrumbsapi_features_revert($module) {
+  custom_breadcrumbsapi_features_rebuild($module);
 }

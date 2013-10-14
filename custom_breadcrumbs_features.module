@@ -3,22 +3,20 @@
 // TODO share with .install. Watch vocabulary / term stuff.
 // TODO run coder.
 // TODO look for dpm / todos.
+// TODO document functions
 
 /**
- * Get a list of breadcrumb types, keyed by their associated machine name.
- *
- * @return
- *   List of breadcrumb types keyed by their machine name.
+ * Get a list of breadcrumb types, keyed by their associated table.
  */
 function _custom_breadcrumbs_features_get_types() {
   return array(
-    'custom_breadcrumb'             => 'Custom Breadcrumb',
-    'custom_breadcrumbsapi'         => 'Custom Breadcrumbs Api',
-    'custom_breadcrumbs_panels'     => 'Custom Breadcrumbs Panels',
-    'custom_breadcrumbs_paths'      => 'Custom Breadcrumbs Paths',
-    'custom_breadcrumbs_term'       => 'Custom Breadcrumbs Term',
-    'custom_breadcrumbs_views'      => 'Custom Breadcrumbs Views',
-    'custom_breadcrumbs_vocabulary' => 'Custom Breadcrumbs Vocabulary',
+    'custom_breadcrumb'             => array('name' => t('Custom Breadcrumbs Node'),       'module' => 'custom_breadcrumb'),
+    'custom_breadcrumbsapi'         => array('name' => t('Custom Breadcrumbs Api'),        'module' => 'custom_breadcrumbsapi'),
+    'custom_breadcrumbs_panels'     => array('name' => t('Custom Breadcrumbs Panels'),     'module' => 'custom_breadcrumbs_panel'),
+    'custom_breadcrumbs_paths'      => array('name' => t('Custom Breadcrumbs Paths'),      'module' => 'custom_breadcrumbs_paths'),
+    'custom_breadcrumbs_term'       => array('name' => t('Custom Breadcrumbs Term'),       'module' => 'custom_breadcrumbs_taxonomy'),
+    'custom_breadcrumbs_views'      => array('name' => t('Custom Breadcrumbs Views'),      'module' => 'custom_breadcrumbs_views'),
+    'custom_breadcrumbs_vocabulary' => array('name' => t('Custom Breadcrumbs Vocabulary'), 'module' => 'custom_breadcrumbs_taxonomy'),
   );
 }
 
@@ -28,11 +26,11 @@ function _custom_breadcrumbs_features_get_types() {
 function custom_breadcrumbs_features_features_api() {
   $types = _custom_breadcrumbs_features_get_types();
   $exports = array();
-  foreach ($exportables as $type => $name) {
-    $exports[$type] = array(
-      'name' => $name,
+  foreach ($exportables as $table => $type) {
+    $exports[$table] = array(
+      'name' => $type['name'],
       'feature_source' => TRUE,
-      'default_hook' => $type . '_features_default_settings',
+      'default_hook' => $table . '_features_default_settings',
       'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/custom_breadcrumbs_features.features.inc',
     );
   }

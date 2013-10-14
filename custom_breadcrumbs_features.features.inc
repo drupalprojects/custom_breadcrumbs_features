@@ -30,6 +30,13 @@ function custom_breadcrumbsapi_features_export_options() {
   return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbsapi');
 }
 
+/**
+ * Implements hook_features_export_options(). [component hook]
+ */
+function custom_breadcrumbs_views_features_export_options() {
+  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_views');
+}
+
 
 /**
  * Generic function for hook_features_export().
@@ -55,6 +62,13 @@ function custom_breadcrumb_features_export($data, &$export, $module_name) {
  */
 function custom_breadcrumbsapi_features_export($data, &$export, $module_name) {
   return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbsapi');
+}
+
+/**
+ * Implements hook_features_export(). [component hook]
+ */
+function custom_breadcrumbs_views_features_export($data, &$export, $module_name) {
+  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_views');
 }
 
 
@@ -111,6 +125,13 @@ function custom_breadcrumbsapi_features_export_render($module_name, $data, $expo
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbsapi');
 }
 
+/**
+ * Implements hook_features_export_render(). [component hook]
+ */
+function custom_breadcrumbs_views_features_export_render($module_name, $data, $export) {
+  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_views');
+}
+
 
 /**
  * Generic function for hook_features_rebuild().
@@ -157,6 +178,13 @@ function custom_breadcrumbsapi_features_rebuild($module) {
   _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbsapi');
 }
 
+/**
+ * Implements hook_features_rebuild(). [component hook]
+ */
+function custom_breadcrumbs_views_features_rebuild($module) {
+  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_views');
+}
+
 
 /**
  * Implements hook_features_revert(). [component hook]
@@ -170,4 +198,11 @@ function custom_breadcrumb_features_revert($module) {
  */
 function custom_breadcrumbsapi_features_revert($module) {
   custom_breadcrumbsapi_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_revert(). [component hook]
+ */
+function custom_breadcrumbs_views_features_revert($module) {
+  custom_breadcrumbs_views_features_rebuild($module);
 }

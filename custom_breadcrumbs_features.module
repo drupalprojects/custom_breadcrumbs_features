@@ -12,7 +12,7 @@ function _custom_breadcrumbs_features_get_types() {
   return array(
     'custom_breadcrumb'                      => array('name' => t('Custom Breadcrumbs Node'),       'module' => 'custom_breadcrumb'),
     'custom_breadcrumbsapi'                  => array('name' => t('Custom Breadcrumbs Api'),        'module' => 'custom_breadcrumbsapi'),
-    'custom_breadcrumbs_panels'              => array('name' => t('Custom Breadcrumbs Panels'),     'module' => 'custom_breadcrumbs_panel'),
+    'custom_breadcrumbs_panels'              => array('name' => t('Custom Breadcrumbs Panels'),     'module' => 'custom_breadcrumbs_panels'),
     'custom_breadcrumbs_paths'               => array('name' => t('Custom Breadcrumbs Paths'),      'module' => 'custom_breadcrumbs_paths'),
     'custom_breadcrumbs_taxonomy_term'       => array('name' => t('Custom Breadcrumbs Term'),       'module' => 'custom_breadcrumbs_taxonomy'),
     'custom_breadcrumbs_taxonomy_vocabulary' => array('name' => t('Custom Breadcrumbs Vocabulary'), 'module' => 'custom_breadcrumbs_taxonomy'),

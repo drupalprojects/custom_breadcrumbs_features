@@ -33,10 +33,23 @@ function custom_breadcrumbs_schema_alter(&$schema) {
 /**
  * Implements hook_modules_installed().
  *
- * Add machine_name field in breadcrumb tables.
+ * Add machine_name field in newly installed breadcrumb tables.
  */
 function custom_breadcrumbs_features_modules_installed($modules) {
-  dpm($modules);
+  $cb_types = _custom_breadcrumbs_features_get_types();
+  foreach ($cb_types as $table => $cb_type) {
+
+    // Keep only modules newly installed.
+    if (in_array($cb_type['module'], $modules)) {
+
+      // Add field machine_name.
+      $schema = drupal_get_schema($table);
+      db_add_field($table, 'machine_name', $schema['fields']['machine_name']);
+      db_add_unique_key($table, 'machine_name', $schema['unique keys']['machine_name']);
+
+    }
+
+  }
 }
 
 /**
@@ -45,7 +58,7 @@ function custom_breadcrumbs_features_modules_installed($modules) {
  * Add machine_name field in all installed breadcrumb tables.
  */
 function custom_breadcrumbs_features_install() {
-  $tables =  array_keys(_custom_breadcrumbs_features_get_types());
+  $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
   // Keep only tables already installed.
   $tables = array_filter($tables, 'db_table_exists');

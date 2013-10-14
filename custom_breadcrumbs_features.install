@@ -60,7 +60,7 @@ function custom_breadcrumbs_features_modules_installed($modules) {
 function custom_breadcrumbs_features_install() {
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
-  // Keep only tables already installed.
+  // Keep only tablesinstalled.
   $tables = array_filter($tables, 'db_table_exists');
 
   // Add field machine_name.
@@ -74,8 +74,19 @@ function custom_breadcrumbs_features_install() {
 /**
  * Implements hook_uninstall().
  *
- * Remove machine_name field in breadcrumb tables.
+ * Remove machine_name field from all installed breadcrumb tables.
  */
 function custom_breadcrumbs_features_uninstall() {
-  // TODO
+  // Load .module so we can retrieve types.
+  drupal_load('module', 'custom_breadcrumbs_features');
+  $tables = array_keys(_custom_breadcrumbs_features_get_types());
+
+  // Keep only tables installed.
+  $tables = array_filter($tables, 'db_table_exists');
+
+  // Remove field machine_name.
+  foreach ($tables as $table) {
+    db_drop_field($table, 'machine_name');
+    db_drop_unique_key($table, 'machine_name');
+  }
 }

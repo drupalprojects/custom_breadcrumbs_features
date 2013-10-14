@@ -4,6 +4,7 @@
 // TODO run coder.
 // TODO look for dpm / todos.
 // TODO document functions
+// TODO make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.

@@ -31,11 +31,11 @@ function custom_breadcrumbs_schema_alter(&$schema) {
 }
 
 /**
- * Implements hook_modules_installed().
+ * Implements hook_modules_enabled().
  *
  * Add machine_name field in newly installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_modules_installed($modules) {
+function custom_breadcrumbs_features_modules_enabled($modules) {
   $cb_types = _custom_breadcrumbs_features_get_types();
   foreach ($cb_types as $table => $cb_type) {
 
@@ -53,11 +53,11 @@ function custom_breadcrumbs_features_modules_installed($modules) {
 }
 
 /**
- * Implements hook_install().
+ * Implements hook_enable().
  *
  * Add machine_name field in all installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_install() {
+function custom_breadcrumbs_features_enable() {
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
   // Keep only tablesinstalled.
@@ -72,11 +72,11 @@ function custom_breadcrumbs_features_install() {
 }
 
 /**
- * Implements hook_uninstall().
+ * Implements hook_disable().
  *
  * Remove machine_name field from all installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_uninstall() {
+function custom_breadcrumbs_features_disable() {
   // Load .module so we can retrieve types.
   drupal_load('module', 'custom_breadcrumbs_features');
   $tables = array_keys(_custom_breadcrumbs_features_get_types());

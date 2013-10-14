@@ -44,6 +44,13 @@ function custom_breadcrumbs_taxonomy_vocabulary_features_export_options() {
   return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_taxonomy_vocabulary');
 }
 
+/**
+ * Implements hook_features_export_options(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_term_features_export_options() {
+  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_taxonomy_term');
+}
+
 
 /**
  * Generic function for hook_features_export().
@@ -52,7 +59,7 @@ function _custom_breadcrumbs_features_features_export($data, &$export, $module_n
   $types = _custom_breadcrumbs_features_get_types();
   $module = $types[$table]['module']; // TODO use $module_name ?
   $export['dependencies']['features'] = 'features';
-  $export['dependencies'][$module] = $module;
+  $export['dependencies'][$module] = $module; // TODO [$table] = $module ? cf terms & vocabularies
   foreach ($data as $component) {
     $export['features'][$table][$component] = $component;
   }
@@ -87,6 +94,13 @@ function custom_breadcrumbs_taxonomy_vocabulary_features_export($data, &$export,
   return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
+/**
+ * Implements hook_features_export(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_term_features_export($data, &$export, $module_name) {
+  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_term');
+}
+
 
 /**
  * Generic function for hook_features_export_render().
@@ -100,7 +114,7 @@ function _custom_breadcrumbs_features_features_export_render($module_name, $data
     if (isset($item[$option])) {
       $export = features_var_export($option);
       $identifier = features_var_export($option);
-      $code[] = "  // Exported custom breadcrumbs: $option.";
+      $code[] = "  // Exported custom breadcrumb: $option.";
       $code[] = "  \$custom_breadcrumbs[$identifier] = $export;";
       $code[] = "";
     }
@@ -155,6 +169,13 @@ function custom_breadcrumbs_taxonomy_vocabulary_features_export_render($module_n
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
+/**
+ * Implements hook_features_export_render(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_term_features_export_render($module_name, $data, $export = NULL) {
+  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_term');
+}
+
 
 /**
  * Generic function for hook_features_rebuild().
@@ -185,6 +206,7 @@ function _custom_breadcrumbs_features_rebuild_item($item, $table) {
       'language'       => $item['language'],
       'node_type'      => $item['node_type'],
     ))->execute();
+  // TODO term defines tid too.
 }
 
 /**
@@ -215,6 +237,13 @@ function custom_breadcrumbs_taxonomy_vocabulary_features_rebuild($module) {
   _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
+/**
+ * Implements hook_features_rebuild(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_term_features_rebuild($module) {
+  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_taxonomy_term');
+}
+
 
 /**
  * Implements hook_features_revert(). [component hook]
@@ -242,4 +271,11 @@ function custom_breadcrumbs_views_features_revert($module) {
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_revert($module) {
   custom_breadcrumbs_taxonomy_vocabulary_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_revert(). [component hook]
+ */
+function custom_breadcrumbs_taxonomy_term_features_revert($module) {
+  custom_breadcrumbs_taxonomy_term_features_rebuild($module);
 }

@@ -74,6 +74,7 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_alter, $form_id) 
  * TODO we may re-use a function from custom_breadcrumbs.module
  */
 function custom_breadcrumbs_features_load($stuff) { // TODO change stuff
+  dpm($stuff);
   return FALSE;
 }
 

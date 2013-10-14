@@ -8,22 +8,17 @@
 // TODO test across different drupal instances.
 // TODO test when breadcrumbs created before module enabled.
 // TODO use_custom_breadcrumbs_features_get_submodules()
+// TODO see every submodule .install => records get inserted.
+// TODO write tests with order of module installation.
+// TODO set weight = MAX(all submodules).
 
 /**
  * Implements hook_schema_alter().
  *
- * Add machine_name field in each table containing breadcrumbs.
+ * Declare machine_name field in breadcrumb tables.
  */
 function custom_breadcrumbs_schema_alter(&$schema) {
-  $tables = array(
-    'custom_breadcrumb',
-    'custom_breadcrumbsapi',
-    'custom_breadcrumbs_panels',
-    'custom_breadcrumbs_paths',
-    'custom_breadcrumbs_taxonomy_term',
-    'custom_breadcrumbs_taxonomy_vocabulary',
-    'custom_breadcrumbs_views',
-  );
+  $tables =  array_keys(_custom_breadcrumbs_features_get_types());
   foreach ($tables as $table) {
     $schema[$table]['fields']['machine_name'] = array(
       'type' => 'varchar',
@@ -35,3 +30,39 @@ function custom_breadcrumbs_schema_alter(&$schema) {
   }
 }
 
+/**
+ * Implements hook_modules_installed().
+ *
+ * Add machine_name field in breadcrumb tables.
+ */
+function custom_breadcrumbs_features_modules_installed($modules) {
+  dpm($modules);
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Add machine_name field in all installed breadcrumb tables.
+ */
+function custom_breadcrumbs_features_install() {
+  $tables =  array_keys(_custom_breadcrumbs_features_get_types());
+
+  // Keep only tables already installed.
+  $tables = array_filter($tables, 'db_table_exists');
+
+  // Add field machine_name.
+  foreach ($tables as $table) {
+    $schema = drupal_get_schema($table);
+    db_add_field($table, 'machine_name', $schema['fields']['machine_name']);
+    db_add_unique_key($table, 'machine_name', $schema['unique keys']['machine_name']);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Remove machine_name field in breadcrumb tables.
+ */
+function custom_breadcrumbs_features_uninstall() {
+  // TODO
+}

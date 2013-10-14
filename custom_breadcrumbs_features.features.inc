@@ -58,6 +58,13 @@ function custom_breadcrumbs_paths_features_export_options() {
   return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_paths');
 }
 
+/**
+ * Implements hook_features_export_options(). [component hook]
+ */
+function custom_breadcrumbs_panels_features_export_options() {
+  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_panels');
+}
+
 
 /**
  * Generic function for hook_features_export().
@@ -113,6 +120,13 @@ function custom_breadcrumbs_taxonomy_term_features_export($data, &$export, $modu
  */
 function custom_breadcrumbs_paths_features_export($data, &$export, $module_name) {
   return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_paths');
+}
+
+/**
+ * Implements hook_features_export(). [component hook]
+ */
+function custom_breadcrumbs_panels_features_export($data, &$export, $module_name) {
+  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_panels');
 }
 
 
@@ -197,6 +211,13 @@ function custom_breadcrumbs_paths_features_export_render($module_name, $data, $e
   return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_paths');
 }
 
+/**
+ * Implements hook_features_export_render(). [component hook]
+ */
+function custom_breadcrumbs_panels_features_export_render($module_name, $data, $export = NULL) {
+  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_panels');
+}
+
 
 /**
  * Generic function for hook_features_rebuild().
@@ -271,6 +292,13 @@ function custom_breadcrumbs_paths_features_rebuild($module) {
   _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_paths');
 }
 
+/**
+ * Implements hook_features_rebuild(). [component hook]
+ */
+function custom_breadcrumbs_panels_features_rebuild($module) {
+  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_panels');
+}
+
 
 /**
  * Implements hook_features_revert(). [component hook]
@@ -312,4 +340,11 @@ function custom_breadcrumbs_taxonomy_term_features_revert($module) {
  */
 function custom_breadcrumbs_paths_features_revert($module) {
   custom_breadcrumbs_paths_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_revert(). [component hook]
+ */
+function custom_breadcrumbs_panelsfeatures_revert($module) {
+  custom_breadcrumbs_panels_features_rebuild($module);
 }

@@ -19,7 +19,6 @@
  * Declare machine_name field in breadcrumb tables.
  */
 function custom_breadcrumbs_schema_alter(&$schema) {
-  // TODO why do we need this ?
   // Load .module so we can retrieve types.
   drupal_load('module', 'custom_breadcrumbs_features');
   $tables =  array_keys(_custom_breadcrumbs_features_get_types());
@@ -28,7 +27,7 @@ function custom_breadcrumbs_schema_alter(&$schema) {
     $schema[$table]['fields']['machine_name'] = array(
       'type' => 'varchar',
       'length' => 128,
-      'not null' => TRUE,
+      'not null' => FALSE,
       'description' => 'The unique machine name for the custom breadcrumb.',
     );
     $schema[$table]['unique keys']['machine_name'] = array('machine_name');
@@ -36,16 +35,16 @@ function custom_breadcrumbs_schema_alter(&$schema) {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  *
  * Add machine_name field in newly installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_modules_enabled($modules) {
+function custom_breadcrumbs_features_modules_installed($modules) {
   $cb_types = _custom_breadcrumbs_features_get_types();
   foreach ($cb_types as $table => $cb_type) {
 
     // Keep only modules newly installed.
-    if (in_array($cb_type['module'], $modules)) {
+    if (in_array($cb_type['module'], $modules) && !db_field_exists($table, 'machine_name')) {
 
       // Add field machine_name.
       $schema = drupal_get_schema($table);
@@ -58,11 +57,11 @@ function custom_breadcrumbs_features_modules_enabled($modules) {
 }
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  *
  * Add machine_name field in all installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_enable() {
+function custom_breadcrumbs_features_install() {
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
   // Keep only tables installed.
@@ -77,11 +76,13 @@ function custom_breadcrumbs_features_enable() {
 }
 
 /**
- * Implements hook_disable().
+ * Implements hook_uninstall().
  *
  * Remove machine_name field from all installed breadcrumb tables.
  */
-function custom_breadcrumbs_features_disable() {
+function custom_breadcrumbs_features_uninstall() {
+  // Load .module so we can retrieve types.
+  drupal_load('module', 'custom_breadcrumbs_features');
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
   // Keep only tables installed.

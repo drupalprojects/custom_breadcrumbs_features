@@ -1,5 +1,6 @@
 <?php
 
+// TODO installing a featurized bc when deps are not enabled creates errors
 // TODO see hook_update_7002 (for each submodule).
 // TODO populate machine names with values existing prior to enabling this module.
 // TODO test when submodule not enabled => alter only if submodule is enabled ?
@@ -18,11 +19,15 @@
  * Declare machine_name field in breadcrumb tables.
  */
 function custom_breadcrumbs_schema_alter(&$schema) {
+  // TODO why do we need this ?
+  // Load .module so we can retrieve types.
+  drupal_load('module', 'custom_breadcrumbs_features');
   $tables =  array_keys(_custom_breadcrumbs_features_get_types());
+
   foreach ($tables as $table) {
     $schema[$table]['fields']['machine_name'] = array(
       'type' => 'varchar',
-      'length' => 255,
+      'length' => 128,
       'not null' => TRUE,
       'description' => 'The unique machine name for the custom breadcrumb.',
     );
@@ -77,8 +82,6 @@ function custom_breadcrumbs_features_enable() {
  * Remove machine_name field from all installed breadcrumb tables.
  */
 function custom_breadcrumbs_features_disable() {
-  // Load .module so we can retrieve types.
-  drupal_load('module', 'custom_breadcrumbs_features');
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
   // Keep only tables installed.

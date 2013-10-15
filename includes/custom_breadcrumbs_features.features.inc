@@ -155,6 +155,7 @@ function _custom_breadcrumbs_features_features_export_render($module_name, $data
 
 /**
  * Generic function to retrieve breadcrumb data.
+ * TODO use custom_breadrumbs_load() ?
  */
 function _custom_breadcrumbs_features_export_item($option, $table) {
   $result = db_select($table, 'cb')
@@ -240,15 +241,8 @@ function _custom_breadcrumbs_features_rebuild_item($item, $table) {
     ->condition('machine_name', $item['machine_name'])
     ->execute();
   db_insert($table)
-    ->fields(array(
-      'name'           => $item['name'],
-      'machine_name'   => $item['machine_name'],
-      'titles'         => $item['titles'],
-      'paths'          => $item['paths'],
-      'visibility_php' => $item['visibility_php'],
-      'language'       => $item['language'],
-      'node_type'      => $item['node_type'], // TODO term defines tid, path defines specific_path, etc -> maybe could use ->fields($item)
-    ))->execute();
+    ->fields($item)
+    ->execute();
 }
 
 /**

@@ -1,10 +1,12 @@
 <?php
 
+// TODO export in custom_breadcrumbs.features.inc
 // TODO run coder.
 // TODO look for dpm / todos.
 // TODO document functions
 // TODO make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 // TODO dependencies = export panels / node types / vocabulary config etc ?
+// TODO test feature uninstall.
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.

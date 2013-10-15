@@ -1,6 +1,5 @@
 <?php
 
-// TODO share with .install. Watch vocabulary / term stuff.
 // TODO run coder.
 // TODO look for dpm / todos.
 // TODO document functions
@@ -32,7 +31,7 @@ function custom_breadcrumbs_features_features_api() {
       'name' => $cb_type['name'],
       'feature_source' => TRUE,
       'default_hook' => $table . '_features_default_settings',
-      'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/custom_breadcrumbs_features.features.inc',
+      'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/includes/custom_breadcrumbs_features.features.inc',
     );
   }
   return $exports;
@@ -121,4 +120,3 @@ function custom_breadcrumbs_views_features_load($machine_name) {
   return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_views');
 }
 
-// TODO move features.inc in includes/

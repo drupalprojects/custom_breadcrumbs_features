@@ -5,13 +5,10 @@
 // TODO populate machine names with values existing prior to enabling this module.
 // TODO test when submodule not enabled => alter only if submodule is enabled ?
 // TODO write tests.
-// TODO use 'export' ctools in schema.
 // TODO test across different drupal instances.
 // TODO test when breadcrumbs created before module enabled.
-// TODO use_custom_breadcrumbs_features_get_submodules()
 // TODO see every submodule .install => records get inserted.
 // TODO write tests with order of module installation.
-// TODO set weight = MAX(all submodules).
 
 /**
  * Implements hook_schema_alter().

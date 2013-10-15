@@ -1,11 +1,9 @@
 <?php
 
-// TODO implement hooks in a for loop
-
 /**
  * Generic function for hook_features_export_options().
  */
-function _custom_breadcrumbs_features_features_export_options($table) {
+function custom_breadcrumbs_features_generic_export_options($table) {
   $options = array();
   $result = db_select($table, 'cb')
     ->fields('cb', array('machine_name', 'name'))
@@ -20,56 +18,56 @@ function _custom_breadcrumbs_features_features_export_options($table) {
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumb_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumb');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumb');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbsapi_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbsapi');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbsapi');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbs_views_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_views');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbs_views');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_taxonomy_vocabulary');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_term_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_taxonomy_term');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbs_taxonomy_term');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbs_paths_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_paths');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbs_paths');
 }
 
 /**
  * Implements hook_features_export_options(). [component hook]
  */
 function custom_breadcrumbs_panels_features_export_options() {
-  return _custom_breadcrumbs_features_features_export_options('custom_breadcrumbs_panels');
+  return custom_breadcrumbs_features_generic_export_options('custom_breadcrumbs_panels');
 }
 
 
 /**
  * Generic function for hook_features_export().
  */
-function _custom_breadcrumbs_features_features_export($data, &$export, $module_name, $table) {
+function custom_breadcrumbs_features_generic_export($data, &$export, $module_name, $table) {
   $types = _custom_breadcrumbs_features_get_types();
   $module = $types[$table]['module']; // TODO use $module_name ?
   $export['dependencies']['features'] = 'features';
@@ -85,61 +83,61 @@ function _custom_breadcrumbs_features_features_export($data, &$export, $module_n
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumb_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumb');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumb');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbsapi_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbsapi');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbsapi');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_views_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_views');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_views');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_term_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_term');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_term');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_paths_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_paths');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_paths');
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_panels_features_export($data, &$export, $module_name) {
-  return _custom_breadcrumbs_features_features_export($data, $export, $module_name, 'custom_breadcrumbs_panels');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_panels');
 }
 
 
 /**
  * Generic function for hook_features_export_render().
  */
-function _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, $table) {
+function custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, $table) {
   $code = array();
   $code[] = '  $custom_breadcrumbs = array();';
   $code[] = '';
   foreach ($data as $option) {
-    $item = _custom_breadcrumbs_features_export_item($option, $table);
+    $item = custom_breadcrumbs_features_generic_export_item($option, $table);
     if (isset($item[$option])) {
       $export = features_var_export($item[$option], '  ');
       $identifier = features_var_export($option);
@@ -157,7 +155,7 @@ function _custom_breadcrumbs_features_features_export_render($module_name, $data
  * Generic function to retrieve breadcrumb data.
  * TODO use custom_breadrumbs_load() ?
  */
-function _custom_breadcrumbs_features_export_item($option, $table) {
+function custom_breadcrumbs_features_generic_export_item($option, $table) {
   $result = db_select($table, 'cb')
     ->fields('cb')
     ->condition('machine_name', $option)
@@ -175,68 +173,68 @@ function _custom_breadcrumbs_features_export_item($option, $table) {
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumb_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumb');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumb');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbsapi_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbsapi');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbsapi');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbs_views_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_views');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbs_views');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_vocabulary');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_term_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_term');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbs_taxonomy_term');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbs_paths_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_paths');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbs_paths');
 }
 
 /**
  * Implements hook_features_export_render(). [component hook]
  */
 function custom_breadcrumbs_panels_features_export_render($module_name, $data, $export = NULL) {
-  return _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, 'custom_breadcrumbs_panels');
+  return custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, 'custom_breadcrumbs_panels');
 }
 
 
 /**
  * Generic function for hook_features_rebuild().
  */
-function _custom_breadcrumbs_features_features_rebuild($module, $table) {
+function custom_breadcrumbs_features_generic_rebuild($module, $table) {
   // TODO why do we invoke this hook ?
   $items = module_invoke($module, $table . '_features_default_settings');
   // Loop over breadcrumbs we need to recreate.
   foreach ($items as $option => $item) {
-    _custom_breadcrumbs_features_rebuild_item($item, $table);
+    custom_breadcrumbs_features_generic_rebuild_item($item, $table);
   }
 }
 
 /**
  * Generic function to store a breadcrumb in database.
  */
-function _custom_breadcrumbs_features_rebuild_item($item, $table) {
+function custom_breadcrumbs_features_generic_rebuild_item($item, $table) {
   db_delete($table)
     ->condition('machine_name', $item['machine_name'])
     ->execute();
@@ -249,49 +247,49 @@ function _custom_breadcrumbs_features_rebuild_item($item, $table) {
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumb_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumb');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumb');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbsapi_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbsapi');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbsapi');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbs_views_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_views');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbs_views');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_taxonomy_vocabulary');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_term_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_taxonomy_term');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbs_taxonomy_term');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbs_paths_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_paths');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbs_paths');
 }
 
 /**
  * Implements hook_features_rebuild(). [component hook]
  */
 function custom_breadcrumbs_panels_features_rebuild($module) {
-  _custom_breadcrumbs_features_features_rebuild($module, 'custom_breadcrumbs_panels');
+  custom_breadcrumbs_features_generic_rebuild($module, 'custom_breadcrumbs_panels');
 }
 
 

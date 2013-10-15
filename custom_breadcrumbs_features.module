@@ -91,39 +91,37 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_state, $form_id) 
 /**
  * Generic function to load a breadcrumb.
  */
-function _custom_breadcrumbs_features_load($machine_name, $table) {
+function custom_breadcrumbs_features_generic_load($machine_name, $table) {
   $cb_types = _custom_breadcrumbs_features_get_types();
   $module = $cb_types[$table]['module'];
   return array_pop(custom_breadcrumbs_load_breadcrumbs($module, $table, array('machine_name' => $machine_name)));
 }
 
-// TODO declare load functions in for loop.
-
 function custom_breadcrumb_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumb');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumb');
 }
 
 function custom_breadcrumbsapi_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbsapi');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbsapi');
 }
 
 function custom_breadcrumbs_panels_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_panels');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_panels');
 }
 
 function custom_breadcrumbs_paths_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_paths');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_paths');
 }
 
 function custom_breadcrumbs_taxonomy_term_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_taxonomy_term');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_taxonomy_term');
 }
 
 function custom_breadcrumbs_taxonomy_vocabulary_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_taxonomy_vocabulary');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 function custom_breadcrumbs_views_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_views');
+  return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_views');
 }
 

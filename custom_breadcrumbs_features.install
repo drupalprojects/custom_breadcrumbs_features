@@ -60,7 +60,7 @@ function custom_breadcrumbs_features_modules_enabled($modules) {
 function custom_breadcrumbs_features_enable() {
   $tables = array_keys(_custom_breadcrumbs_features_get_types());
 
-  // Keep only tablesinstalled.
+  // Keep only tables installed.
   $tables = array_filter($tables, 'db_table_exists');
 
   // Add field machine_name.

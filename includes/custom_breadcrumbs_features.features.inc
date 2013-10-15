@@ -136,20 +136,20 @@ function custom_breadcrumbs_panels_features_export($data, &$export, $module_name
  */
 function _custom_breadcrumbs_features_features_export_render($module_name, $data, $export, $table) {
   $code = array();
-  $code[] = "  $table = array();";
+  $code[] = '  $custom_breadcrumbs = array();';
   $code[] = '';
   foreach ($data as $option) {
     $item = _custom_breadcrumbs_features_export_item($option, $table);
     if (isset($item[$option])) {
-      $export = features_var_export($option);
+      $export = features_var_export($item[$option], '  ');
       $identifier = features_var_export($option);
       $code[] = "  // Exported custom breadcrumb: $option.";
       $code[] = "  \$custom_breadcrumbs[$identifier] = $export;";
       $code[] = "";
     }
   }
-  $code[] = "  return $table;";
-  $code = import("\n", $code);
+  $code[] = '  return $custom_breadcrumbs;';
+  $code = implode("\n", $code);
   return array($table . '_features_default_settings' => $code);
 }
 

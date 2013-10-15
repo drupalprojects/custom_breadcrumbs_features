@@ -15,6 +15,7 @@ Drupal.behaviors.customBreadcrumbsFeatures = {
     };
 
     //TODO test
+    //TODO what if we select ' - Select - '
     var generated = !$('#edit-name', context).val();
 
     // Find out which element we should use.

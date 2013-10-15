@@ -2,3 +2,4 @@ name = Custom breadcrumbs Features
 package = Custom breadcrumbs
 description = Provides features integration to Custom Breadcrumbs
 core = 7.x
+dependencies[] = features

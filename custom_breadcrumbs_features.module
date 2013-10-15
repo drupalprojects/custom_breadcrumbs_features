@@ -4,6 +4,7 @@
 // TODO look for dpm / todos.
 // TODO document functions
 // TODO make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
+// TODO dependencies = export panels / node types / vocabulary config etc ?
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.
@@ -25,10 +26,14 @@ function _custom_breadcrumbs_features_get_types() {
  */
 function custom_breadcrumbs_features_features_api() {
   $cb_types = _custom_breadcrumbs_features_get_types();
+
+  // Keep only installed tables.
+  $tables = array_filter(array_keys($cb_types), 'db_table_exists');
+
   $exports = array();
-  foreach ($cb_types as $table => $cb_type) {
+  foreach ($tables as $table) {
     $exports[$table] = array(
-      'name' => $cb_type['name'],
+      'name' => $cb_types[$table]['name'],
       'feature_source' => TRUE,
       'default_hook' => $table . '_features_default_settings',
       'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/includes/custom_breadcrumbs_features.features.inc',
@@ -97,26 +102,26 @@ function custom_breadcrumb_features_load($machine_name) {
 }
 
 function custom_breadcrumbsapi_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbsapi');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbsapi');
 }
 
 function custom_breadcrumbs_panels_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_panels');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_panels');
 }
 
 function custom_breadcrumbs_paths_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_paths');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_paths');
 }
 
 function custom_breadcrumbs_taxonomy_term_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_taxonomy_term');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_taxonomy_term');
 }
 
 function custom_breadcrumbs_taxonomy_vocabulary_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_taxonomy_vocabulary');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
 function custom_breadcrumbs_views_features_load($machine_name) {
-  return _custom_breadcrumbs_features_load($machine_name, 'custom_breacrumbs_views');
+  return _custom_breadcrumbs_features_load($machine_name, 'custom_breadcrumbs_views');
 }
 

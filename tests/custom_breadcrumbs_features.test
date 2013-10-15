@@ -7,7 +7,7 @@ class CustomBreadcrumbsFeaturesTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Component tests'),
+      'name' => t('Custom Breadcrumbs Features'),
       'description' => t('Run tests for featurized Custom Breadcrumbs.') ,
       'group' => t('Custom Breadcrumbs'),
     );

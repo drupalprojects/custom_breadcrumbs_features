@@ -6,20 +6,49 @@
 // TODO make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 // TODO dependencies = export panels / node types / vocabulary config etc ?
 // TODO test feature uninstall.
+// TODO featurize global config ?
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.
  */
 function _custom_breadcrumbs_features_get_types() {
-  return array(
-    'custom_breadcrumb'                      => array('name' => t('Custom Breadcrumbs Node'),       'module' => 'custom_breadcrumbs'),
-    'custom_breadcrumbsapi'                  => array('name' => t('Custom Breadcrumbs Api'),        'module' => 'custom_breadcrumbsapi'),
-    'custom_breadcrumbs_panels'              => array('name' => t('Custom Breadcrumbs Panels'),     'module' => 'custom_breadcrumbs_panels'),
-    'custom_breadcrumbs_paths'               => array('name' => t('Custom Breadcrumbs Paths'),      'module' => 'custom_breadcrumbs_paths'),
-    'custom_breadcrumbs_taxonomy_term'       => array('name' => t('Custom Breadcrumbs Term'),       'module' => 'custom_breadcrumbs_taxonomy'),
-    'custom_breadcrumbs_taxonomy_vocabulary' => array('name' => t('Custom Breadcrumbs Vocabulary'), 'module' => 'custom_breadcrumbs_taxonomy'),
-    'custom_breadcrumbs_views'               => array('name' => t('Custom Breadcrumbs Views'),      'module' => 'custom_breadcrumbs_views'),
+  $types = array();
+  $types['custom_breadcrumb'] = array(
+    'name'   => t('Custom Breadcrumbs Node'),
+    'form'   => 'custom_breadcrumbs_form',
+    'module' => 'custom_breadcrumbs',
   );
+  $types['custom_breadcrumbsapi'] = array(
+    'name'   => t('Custom Breadcrumbs Api'),
+    'form'   => 'custom_bradcrumbsapi_form',
+    'module' => 'custom_breadcrumbsapi',
+  );
+  $types['custom_breadcrumbs_panels'] = array(
+    'name'   => t('Custom Breadcrumbs Panels'),
+    'form'   => 'custom_breadcrumbs_panels_form',
+    'module' => 'custom_breadcrumbs_panels',
+  );
+  $types['custom_breadcrumbs_paths'] = array(
+    'name'   => t('Custom Breadcrumbs Paths'),
+    'form'   => 'custom_breadcrumbs_paths_form',
+    'module' => 'custom_breadcrumbs_paths',
+  );
+  $types['custom_breadcrumbs_taxonomy_term'] = array(
+    'name'   => t('Custom Breadcrumbs Term'),
+    'form'   => 'custom_breadcrumbs_taxonomy_term_form',
+    'module' => 'custom_breadcrumbs_taxonomy',
+  );
+  $types['custom_breadcrumbs_taxonomy_vocabulary'] = array(
+    'name'   => t('Custom Breadcrumbs Vocabulary'),
+    'form'   => 'custom_breadcrumbs_taxonomy_vocabulary_form',
+    'module' => 'custom_breadcrumbs_taxonomy',
+  );
+  $types['custom_breadcrumbs_views'] = array(
+    'name'   => t('Custom Breadcrumbs Views'),
+    'form'   => 'custom_breadcrumbs_views_form',
+    'module' => 'custom_breadcrumbs_views',
+  );
+  return $types;
 }
 
 /**
@@ -53,7 +82,7 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_state, $form_id) 
   $cb_types =  _custom_breadcrumbs_features_get_types();
 
   foreach ($cb_types as $table => $cb_type) {
-    if ($form_id == $cb_type['module'] . '_form') {
+    if ($form_id == $cb_type['form']) {
 
       // If this is a breadcrumb form, tweak field 'name'.
       $form['name']['#required'] = TRUE;

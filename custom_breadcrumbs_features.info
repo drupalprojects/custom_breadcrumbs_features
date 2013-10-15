@@ -4,3 +4,4 @@ description = Provides features integration to Custom Breadcrumbs
 core = 7.x
 php = 5.3
 dependencies[] = features
+files[] = tests/custom_breadcrumbs_features.test

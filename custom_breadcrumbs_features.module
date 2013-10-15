@@ -1,6 +1,5 @@
 <?php
 
-// TODO export in custom_breadcrumbs.features.inc
 // TODO run coder.
 // TODO look for dpm / todos.
 // TODO document functions
@@ -39,6 +38,8 @@ function custom_breadcrumbs_features_features_api() {
       'feature_source' => TRUE,
       'default_hook' => $table . '_features_default_settings',
       'file' => drupal_get_path('module', 'custom_breadcrumbs_features') . '/includes/custom_breadcrumbs_features.features.inc',
+      'default_file' => FEATURES_DEFAULTS_CUSTOM,
+      'default_filename' => 'custom_breadcrumbs',
     );
   }
   return $exports;

@@ -69,7 +69,7 @@ function custom_breadcrumbs_panels_features_export_options() {
  */
 function custom_breadcrumbs_features_generic_export($data, &$export, $module_name, $table) {
   $types = _custom_breadcrumbs_features_get_types();
-  $module = $types[$table]['module']; // TODO use $module_name ?
+  $module = $types[$table]['module'];
   $export['dependencies']['features'] = 'features';
   $export['dependencies']['custom_breadcrumbs_features'] = 'custom_breadcrumbs_features';
   $export['dependencies'][$module] = $module; // TODO [$table] = $module ? cf terms & vocabularies
@@ -223,7 +223,6 @@ function custom_breadcrumbs_panels_features_export_render($module_name, $data, $
  * Generic function for hook_features_rebuild().
  */
 function custom_breadcrumbs_features_generic_rebuild($module, $table) {
-  // TODO why do we invoke this hook ?
   $items = module_invoke($module, $table . '_features_default_settings');
   // Loop over breadcrumbs we need to recreate.
   foreach ($items as $option => $item) {

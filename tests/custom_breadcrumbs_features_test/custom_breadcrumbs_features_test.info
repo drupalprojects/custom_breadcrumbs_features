@@ -1,5 +1,5 @@
 name = Custom Breadcrumbs Features Test
-description = Test module for Custom Breadcrumbs Features testing.
+description = Test module for Custom Breadcrumbs Features.
 core = 7.x
 package = Testing
 dependencies[] = custom_breadcrumbs

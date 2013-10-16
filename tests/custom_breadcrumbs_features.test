@@ -5,28 +5,18 @@
  */
 class CustomBreadcrumbsFeaturesTestCase extends DrupalWebTestCase {
 
+  private $user;
+
   public static function getInfo() {
     return array(
-      'name' => t('Custom Breadcrumbs Features'),
-      'description' => t('Run tests for featurized Custom Breadcrumbs.') ,
+      'name' => t('Features'),
+      'description' => t('Run tests for Custom Breadcrumbs Features.') ,
       'group' => t('Custom Breadcrumbs'),
     );
   }
 
-  private $user;
-
   public function setUp() {
-    parent::setUp(
-      'custom_breadcrumbs',
-      'custom_breadcrumbsapi',
-      'custom_breadcrumbs_panels',
-      'custom_breadcrumbs_paths',
-      'custom_breadcrumbs_taxonomy',
-      'custom_breadcrumbs_views',
-      'features',
-      'custom_breadcrumbs_features',
-      'custom_breadcrumbs_features_test'
-    );
+    parent::setUp('custom_breadcrumbs_features_test');
 
     // Run a features rebuild to ensure our feature is fully installed.
     features_rebuild();
@@ -36,65 +26,86 @@ class CustomBreadcrumbsFeaturesTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Run test.
+   * 1) By default, crumbs are in default state in Features.
+   * 2) If we modify a crumb, its state becomes override.
+   * 3) If we revert the feature, the crumb loses its modifications.
    */
   public function test() {
     module_load_include('inc', 'features', 'features.export');
 
-    $components = array(
-      'custom_breadcrumb',
-      'custom_breadcrumbsapi',
-      'custom_breadcrumbs_panels',
-      'custom_breadcrumbs_paths',
-      'custom_breadcrumbs_taxonomy_term',
-      'custom_breadcrumbs_taxonomy_vocabulary',
-      'custom_breadcrumbs_views',
+    // Featurized crumbs keyed by their type.
+    $machine_names = array(
+      'custom_breadcrumb'                       => 'page',
+      'custom_breadcrumbsapi'                   => 'maintenance_page',
+      'custom_breadcrumbs_panels'               => 'panel',
+      'custom_breadcrumbs_paths'                => 'admin',
+      'custom_breadcrumbs_taxonomy_term'        => 'my_term',
+      'custom_breadcrumbs_taxonomy_vocabulary'  => 'my_vocabulary',
+      'custom_breadcrumbs_views'                => 'my_view',
     );
 
-    foreach ($components as $component) {
-      $callback = "_test_$component";
+    foreach ($machine_names as $type => $machine_name) {
 
-      // Ensure that the component/default is properly available.
-      $object = $this->$callback('load');
-      $this->assertTrue(!empty($object), t('@component present.', array('@component' => $component)));
+      // Ensure that the crumb is properly available.
+      $crumb = $this->loadBreadcrumb($type, $machine_name);
+      $this->assertTrue(!empty($crumb), t('@type present.', array('@type' => $type)));
 
-      // Ensure that the component is defaulted.
+      // Ensure that the crumb is defaulted.
       $states = features_get_component_states(array('custom_breadcrumbs_features_test'), FALSE, TRUE);
-      $this->assertTrue($states['custom_breadcrumbs_features_test'][$component] === FEATURES_DEFAULT, t('@component state: Default.', array('@component' => $component)));
+      $this->assertTrue($states['custom_breadcrumbs_features_test'][$type] === FEATURES_DEFAULT, t('@type state: Default.', array('@type' => $type)));
 
-      // Override component and test that Features detects the override.
-      $this->$callback('override', $this);
+      // Override crumb and test that Features detects the override.
+      $crumb->name = 'Foo Bar';
+      $this->saveBreadcrumb($type, $crumb);
       $states = features_get_component_states(array('custom_breadcrumbs_features_test'), FALSE, TRUE);
-      $this->assertTrue($states['custom_breadcrumbs_features_test'][$component] === FEATURES_OVERRIDDEN, t('@component state: Overridden.', array('@component' => $component)));
+      $this->assertTrue($states['custom_breadcrumbs_features_test'][$type] === FEATURES_OVERRIDDEN, t('@type state: Overridden.', array('@type' => $type)));
     }
 
-    // Revert component and ensure that component has reverted.
+    // Revert crumb and ensure that crumb has reverted.
     // Do this in separate loops so we only have to run
     // drupal_flush_all_caches() once.
-    foreach ($components as $component) {
-      features_revert(array('custom_breadcrumbs_features_test' => array($component)));
+    foreach ($machine_names as $type => $machine_name) {
+      features_revert(array('custom_breadcrumbs_features_test' => array($type)));
     }
     drupal_flush_all_caches();
-    foreach ($components as $component) {
-      // Reload so things modules can clear their cache if needed.
-      $this->$callback('load');
+    foreach ($machine_names as $type => $machine_name) {
+      // Reload so load funcion can clear their cache if needed.
+      $crumb = $this->loadBreadcrumb($type, $machine_name);
       $states = features_get_component_states(array('custom_breadcrumbs_features_test'), FALSE, TRUE);
-      $this->assertTrue($states['custom_breadcrumbs_features_test'][$component] === FEATURES_DEFAULT, t('@component reverted.', array('@component' => $component)));
+      $this->assertTrue($states['custom_breadcrumbs_features_test'][$type] === FEATURES_DEFAULT, t('@type reverted.', array('@type' => $type)));
     }
   }
 
-  protected function _test_custom_breadcrumb($op = 'load') {
-    switch ($op) {
-      case 'load':
-        // TODO
-        return field_info_instance('node', 'field_features_test', 'features_test');
-      case 'override':
-        // TODO
-        $field_instance = field_info_instance('node', 'field_features_test', 'features_test');
-        $field_instance['label'] = 'Foo bar';
-        field_update_instance($field_instance);
-        break;
-    }
+  /**
+   * Helper - Load a breadcrumb.
+   *
+   * @param $cb_type
+   *   Type of breadcrumb.
+   * @param $machine_name
+   *   Machine object of the breadcrumb.
+   *
+   * @return
+   *   Breadcrumb array or FALSE.
+   */
+  function loadBreadcrumb($cb_type, $machine_name) {
+    return db_select($cb_type, 'cb')
+      ->fields('cb')
+      ->condition('machine_name', $machine_name)
+      ->execute()
+      ->fetchObject();
   }
+
+  /**
+   * Helper - Save a breadcrumb.
+   *
+   * @param $cb_type
+   *   Type of breadcrumb.
+   * @param $breadcrumb
+   *   Breadcrumb object.
+   */
+  function saveBreadcrumb($cb_type, $breadcrumb) {
+    drupal_write_record($cb_type, $breadcrumb, array('bid'));
+  } 
+
 }
 

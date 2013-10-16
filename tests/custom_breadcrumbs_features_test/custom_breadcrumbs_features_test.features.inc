@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * custom_breadcrumbs_features_test.custom_breadcrumbs.inc
+ * custom_breadcrumbs_features_test.features.inc
  */
 
 /**
@@ -73,7 +73,7 @@ function custom_breadcrumbs_features_test_custom_breadcrumbs_taxonomy_term_featu
   // Exported custom breadcrumb: my_term.
   $custom_breadcrumbs['my_term'] = array(
     'name' => 'My Term',
-    'titles' => 'Custom Title',
+    'titles' => 'title',
     'paths' => 'node',
     'tid' => 3,
     'visibility_php' => 'return TRUE;',
@@ -93,7 +93,7 @@ function custom_breadcrumbs_features_test_custom_breadcrumbs_taxonomy_vocabulary
   // Exported custom breadcrumb: my_vocabulary.
   $custom_breadcrumbs['my_vocabulary'] = array(
     'name' => 'My Vocabulary',
-    'titles' => 'Custom Title',
+    'titles' => 'title',
     'paths' => 'node',
     'vid' => 2,
     'visibility_php' => 'return TRUE;',

@@ -37,6 +37,8 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends DrupalWebTestCase {
    * If we create new crumbs, they have machine names.
    */
   public function testMachineNames() {
+  //TODO case where custom_bc enabled after cb_features
+  //TODO case where 2 old bc have the same name
     // Prepare crumbs to be created before features support is enabled.
     $crumbs1 = $this->crumbs;
     foreach ($crumbs1 as $type => $edit) {
@@ -52,6 +54,7 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends DrupalWebTestCase {
 
     // Enable our module + assert they do have a machine name now.
     module_enable(array('custom_breadcrumbs_features'));
+    $this->assertText('Generated machine name');
     foreach ($crumbs1 as $type => $edit) {
       $this->assertMachineName($type, $edit['name']);
     }

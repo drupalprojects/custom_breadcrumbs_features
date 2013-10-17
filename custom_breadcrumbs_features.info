@@ -3,4 +3,5 @@ package = Custom breadcrumbs
 description = Provides features integration to Custom Breadcrumbs
 core = 7.x
 dependencies[] = features
-files[] = tests/custom_breadcrumbs_features.test
+files[] = tests/features_integration.test
+files[] = tests/machine_names.test

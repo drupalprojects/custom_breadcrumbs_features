@@ -153,7 +153,6 @@ function custom_breadcrumbs_features_generic_export_render($module_name, $data, 
 
 /**
  * Generic function to retrieve breadcrumb data.
- * TODO use custom_breadrumbs_load() ?
  */
 function custom_breadcrumbs_features_generic_export_item($option, $table) {
   $result = db_select($table, 'cb')

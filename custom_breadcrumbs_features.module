@@ -5,8 +5,16 @@
 // TODO doc: document functions
 // TODO test: make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 // TODO test: feature uninstall.
+// TODO test: across different drupal instances.
+// TODO test: when breadcrumbs created before module enabled.
+// TODO test: write tests with order of module installation.
+// TODO test: if I create a breadcrumb, it show up in features interface.
 // TODO feature: featurize global config ?
 // TODO feature: dependencies = export panels / node types / vocabulary config etc ?
+// TODO feature: see hook_update_7002 (for each submodule).
+// TODO feature: populate machine names with values existing prior to enabling this module.
+// TODO feature: see every submodule .install => records get inserted.
+
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.

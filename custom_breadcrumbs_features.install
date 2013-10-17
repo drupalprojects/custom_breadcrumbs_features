@@ -1,15 +1,5 @@
 <?php
 
-// TODO installing a featurized bc when deps are not enabled creates errors
-// TODO see hook_update_7002 (for each submodule).
-// TODO populate machine names with values existing prior to enabling this module.
-// TODO test when submodule not enabled => alter only if submodule is enabled ?
-// TODO write tests.
-// TODO test across different drupal instances.
-// TODO test when breadcrumbs created before module enabled.
-// TODO see every submodule .install => records get inserted.
-// TODO write tests with order of module installation.
-
 /**
  * Implements hook_schema_alter().
  *

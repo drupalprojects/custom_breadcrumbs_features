@@ -13,8 +13,14 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends DrupalWebTestCase {
     );
   }
 
+  private $user;
+
   public function setUp() {
     parent::setUp('custom_breadcrumbs_features_test');
+
+    // Login our admin user.
+    $this->user = $this->drupalCreateUser(array('administer features', 'administer custom breadcrumbs'));
+    $this->drupalLogin($this->user);
 
     // Run a features rebuild to ensure our feature is fully installed.
     features_rebuild();
@@ -28,7 +34,7 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends DrupalWebTestCase {
   public function testFeaturesIntegration() {
     module_load_include('inc', 'features', 'features.export');
 
-    // Featurized crumbs keyed by their type.
+    // Crumbs featurized in custom_breadcrumbs_features_test, keyed by type.
     $machine_names = array(
       'custom_breadcrumb'                       => 'page',
       'custom_breadcrumbsapi'                   => 'maintenance_page',
@@ -64,10 +70,50 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends DrupalWebTestCase {
     }
     drupal_flush_all_caches();
     foreach ($machine_names as $type => $machine_name) {
-      // Reload so load funcion can clear their cache if needed.
+      // Reload so load funcion can clear cache if needed.
       $crumb = $this->loadBreadcrumb($type, $machine_name);
       $states = features_get_component_states(array('custom_breadcrumbs_features_test'), FALSE, TRUE);
       $this->assertTrue($states['custom_breadcrumbs_features_test'][$type] === FEATURES_DEFAULT, t('@type reverted.', array('@type' => $type)));
+    }
+  }
+
+  /**
+   * If I create a breadcrumb, it          shows up in the features interface.
+   * If I delete a breadcrumb, it does not show  up in the features interface.
+   */
+  function testFeaturesUI() {
+    // Create dummy breadcrumbs, keyed by type.
+    $crumbs = array();
+    $crumbs['custom_breadcrumb']                      = array('node_type' => 'page');
+    $crumbs['custom_breadcrumbsapi']                  = array('module_page' => 'maintenance_page');
+    $crumbs['custom_breadcrumbs_paths']               = array('specific_path' => 'admin');
+    $crumbs['custom_breadcrumbs_taxonomy_vocabulary'] = array('vid' => taxonomy_vocabulary_machine_name_load('tags')->vid, 'paths' => 'node');
+    foreach ($crumbs as $table => $edit) {
+      $crumbs[$table]['name'] = $this->randomName();
+      $crumbs[$table]['machine_name'] = drupal_strtolower($crumbs[$table]['name']);
+    }
+    foreach ($crumbs as $table => $edit) {
+      $this->createBreadcrumb($table, $edit);
+    }
+
+    // Assert they show up in features UI.
+    $this->drupalGet('admin/structure/features/create');
+    $this->assertResponse(200);
+    foreach ($crumbs as $edit) {
+      $this->assertText($edit['name']);
+    }
+
+    // Delete breadcrumbs.
+    foreach ($crumbs as $table => $edit) {
+      $crumb = $this->loadBreadcrumb($table, $edit['machine_name']);
+      $this->deleteBreadcrumb($table, $crumb->bid);
+    }
+
+    // Assert they do not show up in features UI.
+    $this->drupalGet('admin/structure/features/create');
+    $this->assertResponse(200);
+    foreach ($crumbs as $edit) {
+      $this->assertNoText($edit['name']);
     }
   }
 
@@ -77,10 +123,10 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends DrupalWebTestCase {
    * @param $cb_type
    *   Type of breadcrumb.
    * @param $machine_name
-   *   Machine object of the breadcrumb.
+   *   Machine name of the breadcrumb.
    *
    * @return
-   *   Breadcrumb array or FALSE.
+   *   Breadcrumb object or FALSE.
    */
   function loadBreadcrumb($cb_type, $machine_name) {
     return db_select($cb_type, 'cb')
@@ -100,7 +146,59 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends DrupalWebTestCase {
    */
   function saveBreadcrumb($cb_type, $breadcrumb) {
     drupal_write_record($cb_type, $breadcrumb, array('bid'));
-  } 
+  }
+
+  /**
+   * Helper - Create a breadcrumb through the web UI.
+   *
+   * @param $cb_type
+   *   Breadcrumb type.
+   * @param $edit
+   *   Array of breadcrumb values.
+   */
+  function createBreadcrumb($cb_type, $edit = array()) {
+    $edit += array(
+      'name' => 'Foo Bar',
+      'titles' => 'crumb|title',
+    );
+    $paths = $this->getBreadcrumbTypes();
+    $this->drupalGet('admin/structure/custom_breadcrumbs/' . $paths[$cb_type] . '/add');
+    $this->assertResponse(200);
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Helper - Delete a breadcrumb through the web UI.
+   *
+   * @param $cb_type
+   *   Type of breadcrumb.
+   * @param $bid
+   *   Breadcrumb id.
+   */
+  function deleteBreadcrumb($cb_type, $bid) {
+    $paths = $this->getBreadcrumbTypes();
+    $this->drupalGet('admin/structure/custom_breadcrumbs/' . $paths[$cb_type] . '/edit/' . $bid);
+    $this->assertResponse(200);
+    $edit = array();
+    $this->drupalPost(NULL, $edit, t('Delete'));
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Helper - List of paths keyed by crumb type.
+   */
+  function getBreadcrumbTypes() {
+    return array(
+      'custom_breadcrumb'                      => 'node',
+      'custom_breadcrumbsapi'                  => 'module',
+      'custom_breadcrumbs_paths'               => 'path',
+      'custom_breadcrumbs_panels'              => 'panels',
+      'custom_breadcrumbs_taxonomy_term'       => 'taxonomy_term',
+      'custom_breadcrumbs_taxonomy_vocabulary' => 'taxonomy_vocabulary',
+      'custom_breadcrumbs_views'               => 'views',
+    );
+  }
 
 }
 

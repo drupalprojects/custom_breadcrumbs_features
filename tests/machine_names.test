@@ -2,9 +2,8 @@
 
 /**
  * Test that Custom Breadcrumbs can be associated with machine names.
- * TODO put helpers into a common class
  */
-class CustomBreadcrumbsFeaturesMachineNamesTestCase extends DrupalWebTestCase {
+class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFeaturesCommonTestCase {
 
   private $user;
   private $crumbs;
@@ -75,41 +74,6 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends DrupalWebTestCase {
       $this->assertMachineName($type, $edit['name']);
     }
 
-  }
-
-  /**
-   * Helper - List of paths keyed by crumb type.
-   */
-  function getBreadcrumbTypes() {
-    return array(
-      'custom_breadcrumb'                      => 'node',
-      'custom_breadcrumbsapi'                  => 'module',
-      'custom_breadcrumbs_paths'               => 'path',
-      'custom_breadcrumbs_panels'              => 'panels',
-      'custom_breadcrumbs_taxonomy_term'       => 'taxonomy_term',
-      'custom_breadcrumbs_taxonomy_vocabulary' => 'taxonomy_vocabulary',
-      'custom_breadcrumbs_views'               => 'views',
-    );
-  }
-
-  /**
-   * Helper - Create a breadcrumb.
-   *
-   * @param $cb_type
-   *   Breadcrumb type.
-   * @param $edit
-   *   Array of breadcrumb values.
-   */
-  function createBreadcrumb($cb_type, $edit = array()) {
-    $edit += array(
-      'name' => 'Foo Bar',
-      'titles' => 'crumb|title',
-    );
-    $paths = $this->getBreadcrumbTypes();
-    $this->drupalGet('admin/structure/custom_breadcrumbs/' . $paths[$cb_type] . '/add');
-    $this->assertResponse(200);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
   }
 
   /**

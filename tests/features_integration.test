@@ -16,14 +16,17 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends CustomBreadcrumbsFeat
   private $user;
 
   public function setUp() {
-    parent::setUp('custom_breadcrumbs_features_test');
-
-    // Login our admin user.
+    parent::setUp(
+      'custom_breadcrumbs_features',
+      'custom_breadcrumbs',
+      'custom_breadcrumbsapi',
+      'custom_breadcrumbs_panels',
+      'custom_breadcrumbs_paths',
+      'custom_breadcrumbs_taxonomy',
+      'custom_breadcrumbs_views'
+    );
     $this->user = $this->drupalCreateUser(array('administer features', 'administer custom breadcrumbs'));
     $this->drupalLogin($this->user);
-
-    // Run a features rebuild to ensure our feature is fully installed.
-    features_rebuild();
   }
 
   /**
@@ -32,6 +35,10 @@ class CustomBreadcrumbsFeaturesIntegrationTestCase extends CustomBreadcrumbsFeat
    * 3) If we revert the feature, the crumb loses its modifications.
    */
   public function testFeaturesIntegration() {
+    module_enable(array('custom_breadcrumbs_features_test'));
+    // Run a features rebuild to ensure our feature is fully installed.
+    features_rebuild();
+
     module_load_include('inc', 'features', 'features.export');
 
     // Crumbs featurized in custom_breadcrumbs_features_test, keyed by type.

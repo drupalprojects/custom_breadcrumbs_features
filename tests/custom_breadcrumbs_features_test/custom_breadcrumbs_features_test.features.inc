@@ -5,6 +5,22 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function custom_breadcrumbs_features_test_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function custom_breadcrumbs_features_test_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
  * Implements hook_custom_breadcrumb_features_default_settings().
  */
 function custom_breadcrumbs_features_test_custom_breadcrumb_features_default_settings() {
@@ -142,4 +158,21 @@ function custom_breadcrumbs_features_test_custom_breadcrumbsapi_features_default
   );
 
   return $custom_breadcrumbs;
+}
+
+/**
+ * Implements hook_node_info().
+ */
+function custom_breadcrumbs_features_test_node_info() {
+  $items = array(
+    'page' => array(
+      'name' => t('page'),
+      'base' => 'node_content',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
+  );
+  return $items;
 }

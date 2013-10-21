@@ -8,8 +8,6 @@
 // TODO test: across different drupal instances.
 // TODO test: when breadcrumbs created before module enabled.
 // TODO test: write tests with order of module installation.
-// TODO feature: regenerate test feature with deps
-// TODO feature: dependencies = export panels / node types / vocabulary config etc ?
 // TODO feature: see hook_update_7002 (for each submodule).
 // TODO feature: populate machine names with values existing prior to enabling this module.
 // TODO feature: see every submodule .install => records get inserted.

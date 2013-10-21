@@ -113,10 +113,10 @@ function custom_breadcrumbs_views_features_export($data, &$export, $module_name)
   $view_names = array();
   $views = views_get_all_views();
   foreach ($data as $machine_name) {
-    $view_path = custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_views')->view_path;
+    $view_path = custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_views')->views_path;
     foreach ($views as $view) {
       foreach ($view->display as $display) {
-        if ($display->display_options['path'] == $view_path) {
+        if (isset($display->display_options['path']) && ($display->display_options['path'] == $view_path)) {
           $view_names[] = $view->name;
           break 2;
         }
@@ -161,7 +161,7 @@ function custom_breadcrumbs_paths_features_export($data, &$export, $module_name)
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_panels_features_export($data, &$export, $module_name) {
-  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_panels', $pipe);
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_panels');
 }
 
 

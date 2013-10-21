@@ -67,23 +67,35 @@ function custom_breadcrumbs_panels_features_export_options() {
 /**
  * Generic function for hook_features_export().
  */
-function custom_breadcrumbs_features_generic_export($data, &$export, $module_name, $table) {
-  $types = _custom_breadcrumbs_features_get_types();
-  $module = $types[$table]['module'];
+function custom_breadcrumbs_features_generic_export($data, &$export, $module_name, $table, $pipe = array()) {
+  // Add dependency on features modules.
   $export['dependencies']['features'] = 'features';
   $export['dependencies']['custom_breadcrumbs_features'] = 'custom_breadcrumbs_features';
-  $export['dependencies'][$module] = $module; // TODO [$table] = $module ? cf terms & vocabularies
+
+  // Add dependency on breadcrumbs submodule. 
+  $types = _custom_breadcrumbs_features_get_types();
+  $module = $types[$table]['module'];
+  $export['dependencies'][$module] = $module;
+
+  // Add featurized stuff.
   foreach ($data as $component) {
     $export['features'][$table][$component] = $component;
   }
-  return array(); // TODO weird
+
+  return $pipe;
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumb_features_export($data, &$export, $module_name) {
-  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumb');
+  // Add node types as dependency.
+  $node_types = array();
+  foreach ($data as $machine_name) {
+    $node_types[] = custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumb')->node_type;
+  }
+  $pipe = array('node' => drupal_map_assoc($node_types));
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumb', $pipe);
 }
 
 /**
@@ -97,20 +109,44 @@ function custom_breadcrumbsapi_features_export($data, &$export, $module_name) {
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_views_features_export($data, &$export, $module_name) {
-  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_views');
+  // Add views as dependency.
+  $view_names = array();
+  $views = views_get_all_views();
+  foreach ($data as $machine_name) {
+    $view_path = custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_views')->view_path;
+    foreach ($views as $view) {
+      foreach ($view->display as $display) {
+        if ($display->display_options['path'] == $view_path) {
+          $view_names[] = $view->name;
+          break 2;
+        }
+      }
+    }
+  }
+  $pipe = array('views_view' => drupal_map_assoc($view_names));
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_views', $pipe);
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_vocabulary_features_export($data, &$export, $module_name) {
-  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary');
+  // Add vocabularies as dependency.
+  $vocab_machine_names = array();
+  $vocabs = taxonomy_get_vocabularies();
+  foreach ($data as $machine_name) {
+    $vid = custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_taxonomy_vocabulary')->vid;
+    $vocab_machine_names[] = taxonomy_vocabulary_load($vid)->machine_name;
+  }
+  $pipe = array('taxonomy' => drupal_map_assoc($vocab_machine_names));
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_vocabulary', $pipe);
 }
 
 /**
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_taxonomy_term_features_export($data, &$export, $module_name) {
+  // Looks like taxonomy terms cannot be featurized, so we do not set them as a dependency.
   return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_taxonomy_term');
 }
 
@@ -125,7 +161,7 @@ function custom_breadcrumbs_paths_features_export($data, &$export, $module_name)
  * Implements hook_features_export(). [component hook]
  */
 function custom_breadcrumbs_panels_features_export($data, &$export, $module_name) {
-  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_panels');
+  return custom_breadcrumbs_features_generic_export($data, $export, $module_name, 'custom_breadcrumbs_panels', $pipe);
 }
 
 

@@ -4,12 +4,9 @@
 // TODO doc: look for dpm / todos.
 // TODO doc: document functions
 // TODO test: make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
-// TODO test: feature uninstall.
 // TODO test: across different drupal instances.
-// TODO test: when breadcrumbs created before module enabled.
-// TODO test: write tests with order of module installation.
+// TODO test: manually test generation of machine names
 // TODO feature: see hook_update_7002 (for each submodule).
-// TODO feature: populate machine names with values existing prior to enabling this module.
 // TODO feature: see every submodule .install => records get inserted.
 
 

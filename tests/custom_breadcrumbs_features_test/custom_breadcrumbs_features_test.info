@@ -25,3 +25,4 @@ features[features_api][] = api:2
 features[node][] = page
 features[taxonomy][] = my_vocabulary
 features[views_view][] = my_view
+hidden = 1

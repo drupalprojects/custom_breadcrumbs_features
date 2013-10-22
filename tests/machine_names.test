@@ -35,6 +35,7 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
    * By default, crumbs have no machine name.
    * If we enable our module, crumbs have machine names.
    * If we create new crumbs, they have machine names.
+   * If we uninstall our module, crumbs have no machine name.
    */
   public function testMachineNames() {
   //TODO case where custom_bc enabled after cb_features
@@ -74,6 +75,14 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
       $this->assertMachineName($type, $edit['name']);
     }
 
+    // Uninstall our module + crumbs have *no* machine name.
+    drupal_uninstall_modules(array('custom_breadcrumbs_features'));
+    foreach ($crumbs1 as $type => $edit) {
+      $this->assertNoMachineName($type, $edit['name']);
+    }
+    foreach ($crumbs2 as $type => $edit) {
+      $this->assertNoMachineName($type, $edit['name']);
+    }
   }
 
   /**

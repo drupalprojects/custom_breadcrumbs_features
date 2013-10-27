@@ -5,9 +5,7 @@
 // TODO doc: document functions
 // TODO test: make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 // TODO test: across different drupal instances.
-// TODO test: manually test generation of machine names
-// TODO feature: see hook_update_7002 (for each submodule).
-// TODO feature: see every submodule .install => records get inserted.
+// TODO test: alpha + dev
 
 
 /**
@@ -123,9 +121,11 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_state, $form_id) 
  * Generic function to load a breadcrumb.
  */
 function custom_breadcrumbs_features_generic_load($machine_name, $table) {
-  $cb_types = _custom_breadcrumbs_features_get_types();
-  $module = $cb_types[$table]['module'];
-  return array_pop(custom_breadcrumbs_load_breadcrumbs($module, $table, array('machine_name' => $machine_name)));
+  return db_select($table, 'cb')
+    ->fields('cb')
+    ->condition('machine_name', $machine_name)
+    ->execute()
+    ->fetchObject();
 }
 
 function custom_breadcrumb_features_load($machine_name) {

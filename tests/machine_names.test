@@ -20,7 +20,7 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
     parent::setUp('custom_breadcrumbs', 'custom_breadcrumbsapi', 'custom_breadcrumbs_paths', 'custom_breadcrumbs_taxonomy');
 
     // Login our user.
-    $this->user = $this->drupalCreateUser(array('access administration pages', 'administer custom breadcrumbs'));
+    $this->user = $this->drupalCreateUser(array('access administration pages', 'administer custom breadcrumbs', 'administer modules'));
     $this->drupalLogin($this->user);
 
     // Prepare dummy crumbs keyed by crumb type.
@@ -38,8 +38,6 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
    * If we uninstall our module, crumbs have no machine name.
    */
   public function testMachineNames() {
-  //TODO case where custom_bc enabled after cb_features
-  //TODO case where 2 old bc have the same name
     // Prepare crumbs to be created *before* features support is enabled.
     $crumbs1 = $this->crumbs;
     foreach ($crumbs1 as $type => $edit) {
@@ -54,8 +52,15 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
     }
 
     // Enable our module + assert they *do* have a machine name.
-    module_enable(array('custom_breadcrumbs_features'));
-    $this->assertText('Generated machine name');
+    $this->drupalGet('admin/modules');
+    $this->assertResponse(200);
+    $edit = array(
+      'modules[Custom breadcrumbs][custom_breadcrumbs_features][enable]' => TRUE,
+      'modules[Features][features][enable]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertResponse(200);
+    $this->assertText(t('Generated machine name'));
     foreach ($crumbs1 as $type => $edit) {
       $this->assertMachineName($type, $edit['name']);
     }
@@ -75,13 +80,75 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
       $this->assertMachineName($type, $edit['name']);
     }
 
-    // Uninstall our module + crumbs have *no* machine name.
-    drupal_uninstall_modules(array('custom_breadcrumbs_features'));
+    // Disable our module + assert crumbs *still* have machine names.
+    $this->drupalGet('admin/modules');
+    $this->assertResponse(200);
+    $edit = array(
+      'modules[Custom breadcrumbs][custom_breadcrumbs_features][enable]' => FALSE,
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
+    foreach ($crumbs1 as $type => $edit) {
+      $this->assertMachineName($type, $edit['name']);
+    }
+    foreach ($crumbs2 as $type => $edit) {
+      $this->assertMachineName($type, $edit['name']);
+    }
+
+    // Uninstall our module + assert crumbs have *no* machine names.
+    $this->drupalGet('admin/modules/uninstall');
+    $edit = array(
+      'uninstall[custom_breadcrumbs_features]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, t('Uninstall'));
+    $this->assertResponse(200);
+    $this->assertText(t('Confirm uninstall'));
+    $this->drupalPost(NULL, array(), t('Uninstall'));
+    $this->assertResponse(200);
+    $this->assertText(t('The selected modules have been uninstalled.'));
     foreach ($crumbs1 as $type => $edit) {
       $this->assertNoMachineName($type, $edit['name']);
     }
     foreach ($crumbs2 as $type => $edit) {
       $this->assertNoMachineName($type, $edit['name']);
+    }
+  }
+
+  /**
+   * Test machine name generation when 2 breadcrumbs have the same name.
+   *
+   * Generated machine names should be unique.
+   */
+  public function testDuplicateNames() {
+    // Create several crumbs twice (i.e. with the same name).
+    $crumbs = $this->crumbs;
+    foreach ($crumbs as $type => $edit){
+      $crumbs[$type]['name'] = $this->randomName();
+      $this->createBreadcrumb($type, $crumbs[$type]);
+      $this->assertText($crumbs[$type]['name']);
+      $this->createBreadcrumb($type, $crumbs[$type]);
+      $this->assertText($crumbs[$type]['name']);
+    }
+
+    // Enable our module + assert they have a unique machine name.
+    $this->drupalGet('admin/modules');
+    $this->assertResponse(200);
+    $edit = array(
+      'modules[Custom breadcrumbs][custom_breadcrumbs_features][enable]' => TRUE,
+      'modules[Features][features][enable]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->assertResponse(200);
+    $this->assertText(t('Generated machine name'));
+    foreach ($crumbs as $type => $edit) {
+      $this->assertMachineName($type, $edit['name']);
+      $machine_names_count = db_select($type, 'cb')
+        ->distinct()
+        ->fields('cb', array('machine_name'))
+        ->condition('name', $edit['name'])
+        ->execute()
+        ->rowCount();
+      $this->assertEqual($machine_names_count, 2);
     }
   }
 

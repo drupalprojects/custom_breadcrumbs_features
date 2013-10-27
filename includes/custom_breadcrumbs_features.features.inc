@@ -372,6 +372,6 @@ function custom_breadcrumbs_paths_features_revert($module) {
 /**
  * Implements hook_features_revert(). [component hook]
  */
-function custom_breadcrumbs_panelsfeatures_revert($module) {
+function custom_breadcrumbs_panels_features_revert($module) {
   custom_breadcrumbs_panels_features_rebuild($module);
 }

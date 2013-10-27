@@ -44,6 +44,24 @@ function custom_breadcrumbs_features_modules_installed($modules) {
 }
 
 /**
+ * Implements hook_modules_enabled().
+ *
+ * Generate missing machine names (crumbs created by submodules's hook_install).
+ */
+function custom_breadcrumbs_features_modules_enabled($modules) {
+  $cb_types = _custom_breadcrumbs_features_get_types();
+  foreach ($cb_types as $table => $cb_type) {
+
+    // Keep only modules newly installed.
+    if (in_array($cb_type['module'], $modules) && db_field_exists($table, 'machine_name')) {
+      // Generate machine names.
+      custom_breadcrumbs_features_generate_missing_machine_names($table);
+    }
+
+  }
+}
+
+/**
  * Implements hook_install().
  *
  * Add machine_name field in all installed breadcrumb tables.
@@ -60,8 +78,20 @@ function custom_breadcrumbs_features_install() {
     db_add_field($table, 'machine_name', $schema['fields']['machine_name']);
     db_add_unique_key($table, 'machine_name', $schema['unique keys']['machine_name']);
   }
+}
 
-  // Generate missing machine names (e.g. crumbs created prior to installing this module).
+/**
+ * Implements hook_enable().
+ *
+ * Generate missing machine names (e.g. crumbs created prior to installing this module).
+ */
+function custom_breadcrumbs_features_enable() {
+  $tables = array_keys(_custom_breadcrumbs_features_get_types());
+
+  // Keep only tables installed.
+  $tables = array_filter($tables, 'db_table_exists');
+
+  // Generate machine names.
   foreach ($tables as $table) {
     custom_breadcrumbs_features_generate_missing_machine_names($table);
   }
@@ -110,19 +140,26 @@ function custom_breadcrumbs_features_generate_missing_machine_names($table) {
 
   // Generate machine names, if needed.
   if ($crumbs->rowCount()) {
+
+    // Get max length of machine_name field.
+    $schema = drupal_get_schema($table);
+    $maxlength = $schema['fields']['machine_name']['length'];
+
     foreach ($crumbs as $crumb) {
       // Generate unique machine name.
       $i = 0;
       do {
-        $machine_name = custom_breadcrumbs_features_transliterate($name, $maxlength) . ($i ? "_$i" : '');
+        $machine_name = custom_breadcrumbs_features_transliterate($crumb->name, $maxlength) . ($i ? "_$i" : '');
         $i++;
-      } while (!custom_breadcrumbs_features_generic_load($machine_name, $table));
+      } while (custom_breadcrumbs_features_generic_load($machine_name, $table));
       // Update crumb in DB.
       $crumb->machine_name = $machine_name;
       drupal_write_record($table, $crumb, array('bid'));
-      drupal_set_message(t('Generated machine name @machine for @type @name.', array('@machine' => $machine_name, '@type' => $table, '@name' => $crumb->name)));
+      drupal_set_message(t('Generated machine name %machine for @type %name.', array('%machine' => $machine_name, '@type' => $table, '%name' => $crumb->name)));
     }
+
   }
+
 }
 
 /**

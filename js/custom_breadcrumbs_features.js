@@ -14,8 +14,6 @@ Drupal.behaviors.customBreadcrumbsFeatures = {
       'custom-breadcrumbs-views-form':               '#edit-views-path'
     };
 
-    //TODO test
-    //TODO what if we select ' - Select - '
     var generated = !$('#edit-name', context).val();
 
     // Find out which element we should use.
@@ -27,7 +25,9 @@ Drupal.behaviors.customBreadcrumbsFeatures = {
           var val = '';
           switch ($(source)[0].tagName.toLowerCase()) {
             case 'select':
-              val = $(source + ' option:selected').text();
+              if ($(source).val()) {
+                val = $(source + ' option:selected').text();
+              }
               break;
             default:
               val = $(source).val();

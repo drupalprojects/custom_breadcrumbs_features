@@ -1,15 +1,21 @@
 <?php
 
-// TODO doc: run coder.
-// TODO doc: look for dpm / todos.
-// TODO doc: document functions
 // TODO test: make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
 // TODO test: across different drupal instances.
 // TODO test: alpha + dev
 
+/**
+ * @file
+ * Module file for custom_breadcrumbs_features.
+ *
+ * - Declares support for features.
+ * - Provides a machine name field for breadcrumbs.
+ */
 
 /**
  * Get a list of breadcrumb types, keyed by their associated table.
+ *
+ * Each crumb comes with its human name, module name and form id.
  */
 function _custom_breadcrumbs_features_get_types() {
   $types = array();
@@ -119,6 +125,14 @@ function custom_breadcrumbs_features_form_alter(&$form, &$form_state, $form_id) 
 
 /**
  * Generic function to load a breadcrumb.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ * @param $table
+ *   Table storing crumbs.
+ *
+ * @return
+ *   Crumb object.
  */
 function custom_breadcrumbs_features_generic_load($machine_name, $table) {
   return db_select($table, 'cb')
@@ -128,30 +142,93 @@ function custom_breadcrumbs_features_generic_load($machine_name, $table) {
     ->fetchObject();
 }
 
+/**
+ * Load a crumb of type custom_breadcrumb.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumb_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumb');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbsapi.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbsapi_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbsapi');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbs_panels.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbs_panels_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_panels');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbs_paths.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbs_paths_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_paths');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbs_taxonomy_term.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbs_taxonomy_term_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_taxonomy_term');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbs_taxonomy_vocabulary.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbs_taxonomy_vocabulary_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_taxonomy_vocabulary');
 }
 
+/**
+ * Load a crumb of type custom_breadcrumbs_views.
+ *
+ * @param $machine_name
+ *   Machine name of the crumb.
+ *
+ * @return
+ *   Crumb object.
+ */
 function custom_breadcrumbs_views_features_load($machine_name) {
   return custom_breadcrumbs_features_generic_load($machine_name, 'custom_breadcrumbs_views');
 }

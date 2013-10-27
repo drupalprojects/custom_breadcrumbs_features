@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Common helpers for custom_breadcrumbs_features tests.
+ */
+
+/**
  * Common functions for Custom Breadcrumbs Features tests.
  */
 class CustomBreadcrumbsFeaturesCommonTestCase extends DrupalWebTestCase {

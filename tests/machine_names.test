@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Test that custom_breadcrumbs_features provides allows crumbs to have a machine name.
+ */
+
+/**
  * Test that Custom Breadcrumbs can be associated with machine names.
  */
 class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFeaturesCommonTestCase {
@@ -122,7 +127,7 @@ class CustomBreadcrumbsFeaturesMachineNamesTestCase extends CustomBreadcrumbsFea
   public function testDuplicateNames() {
     // Create several crumbs twice (i.e. with the same name).
     $crumbs = $this->crumbs;
-    foreach ($crumbs as $type => $edit){
+    foreach ($crumbs as $type => $edit) {
       $crumbs[$type]['name'] = $this->randomName();
       $this->createBreadcrumb($type, $crumbs[$type]);
       $this->assertText($crumbs[$type]['name']);

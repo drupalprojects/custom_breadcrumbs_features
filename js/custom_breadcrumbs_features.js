@@ -1,3 +1,10 @@
+/**
+ * @file
+ * JS for custom_breadcrumbs_features.
+ *
+ * Generate a crumb's name (hence a machine name) when a given form element is updated.
+ */
+
 (function ($) {
 
 Drupal.behaviors.customBreadcrumbsFeatures = {

@@ -1,7 +1,18 @@
 <?php
 
 /**
+ * @file
+ * Code to provide custom_breadcrumbs with features integration.
+ */
+
+/**
  * Generic function for hook_features_export_options().
+ *
+ * @param $table
+ *   Table storing crumbs.
+ *
+ * @return
+ *   Options array as expected by hook_features_export_options().
  */
 function custom_breadcrumbs_features_generic_export_options($table) {
   $options = array();
@@ -66,6 +77,12 @@ function custom_breadcrumbs_panels_features_export_options() {
 
 /**
  * Generic function for hook_features_export().
+ *
+ * @param $table
+ *   Table storing crumbs.
+ *
+ * @return
+ *   Pipe array as expected by hook_features_export().
  */
 function custom_breadcrumbs_features_generic_export($data, &$export, $module_name, $table, $pipe = array()) {
   // Add dependency on features modules.
@@ -167,6 +184,12 @@ function custom_breadcrumbs_panels_features_export($data, &$export, $module_name
 
 /**
  * Generic function for hook_features_export_render().
+ *
+ * @param $table
+ *   Table storing crumbs.
+ *
+ * @return
+ *   Rendered code array as expected by hook_features_export_render().
  */
 function custom_breadcrumbs_features_generic_export_render($module_name, $data, $export, $table) {
   $code = array();
@@ -189,6 +212,14 @@ function custom_breadcrumbs_features_generic_export_render($module_name, $data, 
 
 /**
  * Generic function to retrieve breadcrumb data.
+ *
+ * @param $options
+ *   Option of featurized item (= machine name in our case).
+ * @param $table
+ *   Table storing crumbs.
+ *
+ * @return
+ *   Crumb data in an array, keyed by its machine name. bid is not exported.
  */
 function custom_breadcrumbs_features_generic_export_item($option, $table) {
   $result = db_select($table, 'cb')
@@ -256,6 +287,9 @@ function custom_breadcrumbs_panels_features_export_render($module_name, $data, $
 
 /**
  * Generic function for hook_features_rebuild().
+ *
+ * @param $table
+ *   Table storing crumbs.
  */
 function custom_breadcrumbs_features_generic_rebuild($module, $table) {
   $items = module_invoke($module, $table . '_features_default_settings');
@@ -267,6 +301,11 @@ function custom_breadcrumbs_features_generic_rebuild($module, $table) {
 
 /**
  * Generic function to store a breadcrumb in database.
+ *
+ * @param $item
+ *   Featurized crumb to rebuild.
+ * @param $table
+ *   Table storing crumbs.
  */
 function custom_breadcrumbs_features_generic_rebuild_item($item, $table) {
   db_delete($table)

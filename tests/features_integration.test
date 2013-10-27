@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Test that custom_breadcrumbs_features provides custom_breadcrumbs with features integration.
+ */
+
+/**
  * Test that Custom Breadcrumbs can be exported and rebuilt using Features.
  */
 class CustomBreadcrumbsFeaturesIntegrationTestCase extends CustomBreadcrumbsFeaturesCommonTestCase {

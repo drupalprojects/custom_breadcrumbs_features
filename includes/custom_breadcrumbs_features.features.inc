@@ -308,12 +308,12 @@ function custom_breadcrumbs_features_generic_rebuild($module, $table) {
  *   Table storing crumbs.
  */
 function custom_breadcrumbs_features_generic_rebuild_item($item, $table) {
-  db_delete($table)
+  $item['bid'] = db_select($table, 'cb')
+    ->fields('cb', array('bid'))
     ->condition('machine_name', $item['machine_name'])
-    ->execute();
-  db_insert($table)
-    ->fields($item)
-    ->execute();
+    ->execute()
+    ->fetchField();
+  drupal_write_record($table, $item, empty($item['bid']) ? array() : array('bid'));
 }
 
 /**

@@ -1,9 +1,5 @@
 <?php
 
-// TODO test: make sure machine_name field does not break cb when cb_features is disabled but not uninstalled.
-// TODO test: across different drupal instances.
-// TODO test: alpha + dev
-
 /**
  * @file
  * Module file for custom_breadcrumbs_features.
